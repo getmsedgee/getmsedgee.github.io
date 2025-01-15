@@ -1,1 +1,71 @@
-yes
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Reader</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e1e1e;
+      color: white;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #333;
+      color: white;
+      border: none;
+      font-size: 14px;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Roblox Code Executor</h1>
+    <textarea id="luaScript" placeholder="print("hello world!")"></textarea><br>
+    <button onclick="sendScript()">Execute Script</button>
+    <div id="output"></div>
+  </div>
+
+  <script>
+    function sendScript() {
+      const scriptContent = document.getElementById('luaScript').value;
+      const socket = new WebSocket('ws://localhost:12345');
+
+      socket.onopen = function() {
+        socket.send(JSON.stringify({ action: 'execute', script: scriptContent }));
+        document.getElementById('output').textContent = 'success';
+      };
+
+      socket.onerror = function(error) {
+        document.getElementById('output').textContent = 'error';
+      };
+    }
+  </script>
+</body>
+</html>
